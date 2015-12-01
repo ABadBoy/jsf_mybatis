@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+<h:head> </h:head>
+   <f:view>
+       <h:form id="userForm">
+       <p:dataTable value="#{userBean.allUsers}" var="u" paginator="true" paginatorPosition="bottom" rows="5"
+                    paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                    rowsPerPageTemplate="5,10,15"
+                    emptyMessage="No users found with given criteria" >
+           <f:facet name="header">
+               <p:outputLabel value="List of Users" />
+               <p:commandButton value="ADD" onclick="PF('addUserVar').show()" actionListener="#{userBean.cleanProperties}" update=":addUserForm"  style="float: right;"  />
+               <p:spacer width="30"/>
+           </f:facet>
+           <p:column filterBy="#{u.name}" headerText="USERNAME" filterMatchMode="contains" >
+               <h:outputText value="#{u.name}" />
+          </p:column>
+           <p:column filterBy="#{u.age}" headerText="USER AGE" filterMatchMode="contains">
+               <h:outputText value="#{u.age}" />
+          </p:column>
+           <p:column filterBy="#{u.phone}" headerText=" USER PHONE" filterMatchMode="contains">
+               <h:outputText value="#{u.phone}" />
+          </p:column>
+           <p:column filterBy="#{u.email}" headerText=" USER EMAIL" filterMatchMode="contains">
+               <h:outputText value="#{u.email}" />
+          </p:column>
+           <p:column headerText="EDIT">
+               <p:commandButton  icon="ui-icon-pencil" title="edit user" actionListener="#{userBean.editUser(u)}" update=":editUser" oncomplete="PF('editUserVar').show();"/>
+           </p:column>
+           <p:column headerText="DELETE">
+               <p:commandButton  action="#{userBean.deleteUser(u)}"  update=":userForm" icon="ui-icon-trash" title="delete user" />
+           </p:column>
+       </p:dataTable>
+       </h:form>
+
+       <p:dialog widgetVar="addUserVar" header="Add new user">
+           <h:form id="addUserForm">
+                   <h:panelGrid columns="2" cellpadding="5">
+                       <h:outputLabel for="name" value="User Name :" />
+                       <p:inputText id="name" value="#{userBean.userName}" />
+
+                       <p:outputLabel for="age" value="Age :" />
+                       <p:spinner id="age" value="#{userBean.age}"/>
+
+                       <p:outputLabel for="number" value="Phone :" />
+                       <p:inputText id="number" value="#{userBean.phone}"/>
+
+                       <p:outputLabel for="email" value="Email :" />
+                       <p:inputText id="email" value="#{userBean.email}"/>
+
+                       <p:commandButton value="Add" update=":userForm" actionListener="#{userBean.addUser}" oncomplete="PF('addUserVar').hide();"   />
+                       <p:commandButton value="Cancel" oncomplete="PF('addUserVar').hide();"   />
+                   </h:panelGrid>
+
+           </h:form>
+
+
+       </p:dialog>
+       <p:dialog widgetVar="editUserVar" header="edit user">
+           <h:form id="editUser">
+
+                   <h:panelGrid columns="2" cellpadding="5">
+                       <h:outputLabel for="editName" value="User Name :" />
+                       <p:inputText id="editName" value="#{userBean.currentEditUser.name}" />
+
+                       <p:outputLabel for="deitAge" value="Age :" />
+                       <p:spinner id="deitAge" value="#{userBean.currentEditUser.age}"/>
+
+                       <p:outputLabel for="editNumber" value="Phone :" />
+                       <p:inputText id="editNumber" value="#{userBean.currentEditUser.phone}"/>
+
+                       <p:outputLabel for="editEmail" value="Email :" />
+                       <p:inputText id="editEmail" value="#{userBean.currentEditUser.email}"/>
+
+                       <p:commandButton value="Update"  update=":userForm" actionListener="#{userBean.updateUser(userBean.currentEditUser)}" oncomplete="PF('editUserVar').hide();"   />
+                       <p:commandButton value="Cancel"  oncomplete="PF('editUserVar').hide();"   />
+                   </h:panelGrid>
+
+
+           </h:form>
+
+
+       </p:dialog>
+
+   </f:view>
+
+
+</html>
